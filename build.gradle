@@ -16,7 +16,7 @@ java {
 
 ext {
 	batchName = "demo"
-	batchDir = "$buildDir/BatchDirectory/$batchName"
+	batchDir = "$buildDir/$batchName"
 	environments = [
 		"development",
 		"integration",
