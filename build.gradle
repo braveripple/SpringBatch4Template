@@ -1,0 +1,90 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.18'
+	id 'io.spring.dependency-management' version '1.1.5'
+	id 'eclipse'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
+ext {
+	batchName = "demo"
+	batchDir = "$buildDir/BatchDirectory/$batchName"
+	environments = [
+		"development",
+		"integration",
+		"production"
+	]
+}
+
+jar {
+    archiveFileName = "${batchName}.jar"
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.2'
+	implementation 'org.apache.commons:commons-compress:1.25.0'
+	implementation 'org.apache.commons:commons-lang3:3.14.0'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.2'
+	testImplementation 'org.springframework.batch:spring-batch-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// eclipseタスクで生成される.projectファイルにProject Natureを追加する
+eclipse.project {
+	buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+	natures 'org.eclipse.buildship.core.gradleprojectnature'
+}
+
+// eclipseJdtタスクの最後でEclipse上での必須ファイルを追加する
+eclipseJdt.doLast {
+
+	File f = file('.settings/org.eclipse.core.resources.prefs')
+	if(!f.exists()){
+		f.write('eclipse.preferences.version=1\n')
+		f.append('encoding/<project>=UTF-8')
+	}
+
+	File f2 = file('.settings/org.eclipse.buildship.core.prefs')
+	if(!f2.exists()){
+		f2.write('connection.project.dir=\n')
+		f2.append('eclipse.preferences.version=1')
+	}
+
+}
+
+compileJava.dependsOn(processResources)
