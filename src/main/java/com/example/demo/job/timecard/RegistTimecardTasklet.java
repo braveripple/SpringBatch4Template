@@ -34,7 +34,7 @@ public class RegistTimecardTasklet implements Tasklet{
 
 		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS timecard (created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, name VARCHAR(10));");
 		
-		Arrays.stream(paramName.split(",")).forEach(name->{
+		Arrays.stream(paramName.split(",")).map(String::trim).forEach(name->{
 			logger.info("{}さんを登録します。", name);
 			jdbcTemplate.update("INSERT INTO timecard (name) VALUES(?);", name);
 			logger.info("{}さんを登録しました。", name);
