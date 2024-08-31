@@ -80,7 +80,7 @@ public class BatchConfig {
 		final DefaultJobParametersValidator validator = 
 				new DefaultJobParametersValidator();
 		validator.setRequiredKeys(new String[] {"name"});
-		return null;
+		return validator;
 	}
 
 	@Bean
