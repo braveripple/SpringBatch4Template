@@ -5,6 +5,8 @@ bootJarタスクで生成したjarファイルをjavaコマンドで実行する
 
 ```
 java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring.batch.job.enabled=true --spring.batch.job.names=dosomethingJob
+```
+```
 java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring.batch.job.enabled=true --spring.batch.job.names=timecardJob name=sato
 ```
 
