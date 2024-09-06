@@ -1,5 +1,6 @@
-package com.example.demo.job.timecard;
+package com.example.demo.job.tasklet.timecard;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
@@ -25,16 +26,16 @@ public class DisplayTimecardTasklet implements Tasklet{
 	 
 	private final Logger logger = LoggerFactory.getLogger(DisplayTimecardTasklet.class);	
 
-	private final JdbcTemplate jdbcTemplate;
+	private final JdbcTemplate primaryJdbcTemplate;
 	
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
 		logger.info("*** DisplayTimecardTasklet ***");
 
-		try (Stream<Timecard> stream = jdbcTemplate.queryForStream(
-				"SELECT created_at, name FROM timecard ORDER BY created_at DESC;"
-			  , new DataClassRowMapper<>(Timecard.class))
+		try (Stream<Timecard> stream = primaryJdbcTemplate.queryForStream(
+				"SELECT created_at, name FROM timecard WHERE created_at >= ? ORDER BY created_at DESC;"
+			  , new DataClassRowMapper<>(Timecard.class)
+			  , LocalDate.now())
 			) {
 	    	logger.info("-------------------------------------------------------");
 			stream.forEach(data -> {

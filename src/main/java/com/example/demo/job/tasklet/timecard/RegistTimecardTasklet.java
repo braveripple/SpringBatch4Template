@@ -1,4 +1,4 @@
-package com.example.demo.job.timecard;
+package com.example.demo.job.tasklet.timecard;
 
 import java.util.Arrays;
 
@@ -12,6 +12,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,24 +24,29 @@ public class RegistTimecardTasklet implements Tasklet{
 
 	private final Logger logger = LoggerFactory.getLogger(RegistTimecardTasklet.class);	
 
-	private final JdbcTemplate jdbcTemplate;
+	private final JdbcTemplate primaryJdbcTemplate;
 
 	@Value("#{jobParameters['name']}")
 	private String paramName;
 
 	@Override
+	@Transactional
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
 		logger.info("*** RegistTimecardTasklet ***");
 
-		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS timecard (created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, name VARCHAR(10));");
-		
 		Arrays.stream(paramName.split(",")).map(String::trim).forEach(name->{
 			logger.info("{}さんを登録します。", name);
-			jdbcTemplate.update("INSERT INTO timecard (name) VALUES(?);", name);
+			primaryJdbcTemplate.update("INSERT INTO timecard (name) VALUES(?);", name);
 			logger.info("{}さんを登録しました。", name);
 		});
 
+		String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
+	    
+	    if (currentTransactionName != null) {
+	        System.out.println("Current Transaction Name: " + currentTransactionName);
+	    } else {
+	        System.out.println("No active transaction.");
+	    }	   
 		return RepeatStatus.FINISHED;
 	
 	}
