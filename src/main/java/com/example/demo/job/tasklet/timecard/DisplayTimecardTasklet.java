@@ -33,14 +33,14 @@ public class DisplayTimecardTasklet implements Tasklet{
 		logger.info("*** DisplayTimecardTasklet ***");
 
 		try (Stream<Timecard> stream = primaryJdbcTemplate.queryForStream(
-				"SELECT created_at, name FROM timecard WHERE created_at >= ? ORDER BY created_at DESC;"
+				"SELECT created_at, name FROM timecard WHERE created_at >= ? ORDER BY created_at DESC LIMIT 6;"
 			  , new DataClassRowMapper<>(Timecard.class)
 			  , LocalDate.now())
 			) {
 	    	logger.info("-------------------------------------------------------");
 			stream.forEach(data -> {
 		    	logger.info("日時：{}　名前：{}", 
-		    			data.getCreatedAt().format(DateTimeFormatter.ofPattern( "yyyy/MM/dd HH:mm:ss")), data.getName());
+		    			data.getCreatedAt().format(DateTimeFormatter.ofPattern( "yyyy/MM/dd HH:mm:ss.SSS")), data.getName());
 		    	logger.info("-------------------------------------------------------");
 		    });
 		} catch (DataAccessException e) {
