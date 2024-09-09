@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.example.demo.component.PGCopy;
 import com.zaxxer.hikari.HikariDataSource;
@@ -16,6 +18,8 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 public class DataSourceConfig {
 
+	// DataSourceのBean定義
+	
 	@Bean(name = "primaryDataSource")
 	@ConfigurationProperties(prefix = "spring.datasource.primary")
 	@Primary
@@ -42,6 +46,8 @@ public class DataSourceConfig {
 		return dataSource;
 	}
 	
+	// JdbcTemplateのBean定義
+	
 	@Bean
 	JdbcTemplate primaryJdbcTemplate() {
 		return new JdbcTemplate(primaryDataSource());
@@ -51,6 +57,8 @@ public class DataSourceConfig {
 	JdbcTemplate secondaryJdbcTemplate() {
 		return new JdbcTemplate(secondaryDataSource());
 	}
+	
+	// PGCopyのBean定義
 	
 	@Bean
 	PGCopy primaryPGCopy() {
@@ -62,5 +70,21 @@ public class DataSourceConfig {
 		return new PGCopy(secondaryDataSource());
 	}
 	
-
+	// トランザクションマネージャーのBean定義
+	
+	@Bean(name = "primaryTransactionManager")
+	@Primary
+	PlatformTransactionManager primaryTransactionManager() {
+		return new DataSourceTransactionManager(primaryDataSource());
+	}
+	
+	@Bean(name = "jobRepositoryTransactionManager")
+	PlatformTransactionManager jobRepositoryTransactionManager() {
+		return new DataSourceTransactionManager(jobRepositoryDataSource());
+	}
+	
+	@Bean(name = "secondaryTransactionManager")
+	PlatformTransactionManager secondaryTransactionManager() {
+		return new DataSourceTransactionManager(secondaryDataSource());
+	}
 }
