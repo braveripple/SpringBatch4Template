@@ -28,8 +28,6 @@ import com.example.demo.job.tasklet.timecard.RegistTimecardTasklet;
 @Configuration
 public class JobConfig {
 	
-	private final Logger logger = LoggerFactory.getLogger(JobConfig.class);	
-
 	@Autowired
 	@Qualifier("customJobBuilderFactory")
 	private JobBuilderFactory jobBuilderFactory;
@@ -54,7 +52,7 @@ public class JobConfig {
 		
 		return stepBuilderFactory.get("doSomethingStep").tasklet(new Tasklet() {
 
-			private final Logger logger = LoggerFactory.getLogger(BatchConfig.class);	
+			private final Logger logger = LoggerFactory.getLogger(JobConfig.class);	
 			
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
