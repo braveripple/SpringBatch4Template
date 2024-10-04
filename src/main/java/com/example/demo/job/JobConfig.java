@@ -37,27 +37,27 @@ public class JobConfig {
 	private StepBuilderFactory stepBuilderFactory;
 	
 	// #############################
-	// # doSomethingJob
+	// # HelloWorldJob
 	// #############################
 	
     @Bean
-    Job doSomethingJob(Step doSomethingStep) throws Exception {
-		return jobBuilderFactory.get("doSomethingJob")
-				.start(doSomethingStep)
+    Job helloWorldJob(Step helloWorldStep) throws Exception {
+		return jobBuilderFactory.get("HelloWorldJob")
+				.start(helloWorldStep)
 				.build();
 	}
 	
 	@Bean
-	Step doSomethingStep() throws Exception {
+	Step helloWorldStep() throws Exception {
 		
-		return stepBuilderFactory.get("doSomethingStep").tasklet(new Tasklet() {
+		return stepBuilderFactory.get("HelloWorldStep").tasklet(new Tasklet() {
 
 			private final Logger logger = LoggerFactory.getLogger(JobConfig.class);	
 			
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 				
-				logger.info("Do Something!!");
+				logger.info("Hello World!!");
 
 				final String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
 			    
@@ -69,16 +69,16 @@ public class JobConfig {
 				
 				return RepeatStatus.FINISHED;
 			}
-		}).allowStartIfComplete(true).build();
+		}).build();
 	}
 	
 	// #############################
-	// # timecardJob
+	// # TimecardJob
 	// #############################
 
     @Bean
     Job timecardJob(Step registTimecardStep, Step displayTimecardStep) throws Exception {
-		return jobBuilderFactory.get("timecardJob")
+		return jobBuilderFactory.get("TimecardJob")
 				.incrementer(new RunIdIncrementer())
 				.start(registTimecardStep)
 				.next(displayTimecardStep)
@@ -96,25 +96,25 @@ public class JobConfig {
 
 	@Bean
 	Step registTimecardStep(RegistTimecardTasklet registTimecardTasklet) throws Exception {
-		return stepBuilderFactory.get("registTimecardStep")
+		return stepBuilderFactory.get("RegistTimecardStep")
 				.tasklet(registTimecardTasklet)
 				.build();
 	}
 	
 	@Bean
 	Step displayTimecardStep(DisplayTimecardTasklet displayTimecardTasklet) throws Exception {
-		return stepBuilderFactory.get("displayTimecardStep")
+		return stepBuilderFactory.get("DisplayTimecardStep")
 				.tasklet(displayTimecardTasklet)
 				.build();
 	}
 
 	// #############################
-	// # tableCopyJob
+	// # TableCopyJob
 	// #############################
 	
     @Bean
     Job tableCopyJob(Step tableCopySecondaryToPrimaryStep, Step tableCopyPrimaryToSecondaryStep) throws Exception {
-		return jobBuilderFactory.get("tableCopyJob")
+		return jobBuilderFactory.get("TableCopyJob")
 				.incrementer(new RunIdIncrementer())
 				.start(tableCopySecondaryToPrimaryStep)
 				.next(tableCopyPrimaryToSecondaryStep)
@@ -123,7 +123,7 @@ public class JobConfig {
 	
 	@Bean
 	Step tableCopySecondaryToPrimaryStep(TableCopySecondaryToPrimaryTasklet tasklet1) throws Exception {
-		return stepBuilderFactory.get("tableCopySecondaryToPrimaryStep")
+		return stepBuilderFactory.get("TableCopySecondaryToPrimaryStep")
 				.tasklet(tasklet1)
 				.build();
 	}
@@ -131,7 +131,7 @@ public class JobConfig {
 	@Bean
 	Step tableCopyPrimaryToSecondaryStep(TableCopyPrimaryToSecondaryTasklet tasklet2,
 			@Qualifier("secondaryTransactionManager") PlatformTransactionManager transactionManager) throws Exception {
-		return stepBuilderFactory.get("tableCopyPrimaryToSecondaryStep")
+		return stepBuilderFactory.get("TableCopyPrimaryToSecondaryStep")
 				.tasklet(tasklet2)
 				.transactionManager(transactionManager)
 				.build();
@@ -139,35 +139,36 @@ public class JobConfig {
 
 
 	// #############################
-	// # gateJob
+	// # GateJob
 	// #############################
 	
     @Bean
     Job gateJob(Step gate1Step, Step gate2Step, Step gate3Step) throws Exception {
-		return jobBuilderFactory.get("gateJob")
+		return jobBuilderFactory.get("GateJob")
 				.start(gate1Step)
 				.next(gate2Step)
 				.next(gate3Step)
+				.incrementer(new RunIdIncrementer())
 				.build();
 	}
 	
 	@Bean
 	Step gate1Step(Tasklet gateTasklet) throws Exception {
-		return stepBuilderFactory.get("gate1Step")
+		return stepBuilderFactory.get("Gate1Step")
 				.tasklet(gateTasklet)
 				.build();
 	}
 	
 	@Bean
 	Step gate2Step(Tasklet gateTasklet) throws Exception {
-		return stepBuilderFactory.get("gate2Step")
+		return stepBuilderFactory.get("Gate2Step")
 				.tasklet(gateTasklet)
 				.build();
 	}
 
 	@Bean
 	Step gate3Step(Tasklet gateTasklet) throws Exception {
-		return stepBuilderFactory.get("gate3Step")
+		return stepBuilderFactory.get("Gate3Step")
 				.tasklet(gateTasklet)
 				.build();
 	}

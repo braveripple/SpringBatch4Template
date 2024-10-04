@@ -4,7 +4,7 @@
 bootJarタスクで生成したjarファイルをjavaコマンドで実行する
 
 ```
-java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring.batch.job.enabled=true --spring.batch.job.names=dosomethingJob
+java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring.batch.job.enabled=true --spring.batch.job.names=HelloWorldJob
 ```
 ```
 java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring.batch.job.enabled=true --spring.batch.job.names=timecardJob name=sato
@@ -12,14 +12,19 @@ java -Dfile.encoding=UTF-8 -jar SpringBatch4Template-0.0.1-SNAPSHOT.jar --spring
 
 ## サンプル
 
-### doSomethingJob
+### HelloWorldJob
 
-HelloWorld。1Job1Step。
+HelloWorldを出力するだけ。1Job1Step。
 
-### timecardJob
+### TimecardJob
 
 JobParameterで受け取ったnameをDBのテーブルに登録・表示するJob。
 1:登録、2:表示の2Stepで構成している。
+
+### TableCopyJob
+
+### GateJob
+
 
 ## その他
 

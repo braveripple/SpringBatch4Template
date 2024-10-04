@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DoSomethingJobTest {
+public class HelloWorldJobTest {
 
 	@Autowired
 	private JobLauncherTestUtils jobLauncherTestUtils;
@@ -28,12 +28,6 @@ public class DoSomethingJobTest {
 		final JobExecution jobExecution = jobLauncherTestUtils.launchJob();
 		assertThat(jobExecution.getExitStatus(), is(ExitStatus.COMPLETED));
 	}
-
-//	@Test
-//	public void testStep() throws Exception {
-//		final JobExecution jobExecution = jobLauncherTestUtils.launchStep("doSomethingStep");
-//		assertThat(jobExecution.getExitStatus(), is(ExitStatus.COMPLETED));
-//	}
 	
 	@TestConfiguration
 	static class JobTestConfig {
@@ -42,7 +36,7 @@ public class DoSomethingJobTest {
 			return new JobLauncherTestUtils() {
 				@Override
 				@Autowired
-				public void setJob(@Qualifier("doSomethingJob") Job job) {
+				public void setJob(@Qualifier("helloWorldJob") Job job) {
 					super.setJob(job);
 				}
 			};
