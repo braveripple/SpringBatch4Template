@@ -1,4 +1,4 @@
-package com.example.demo.job.tasklet.gate;
+package com.example.demo.service;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
