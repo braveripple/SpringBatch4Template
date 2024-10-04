@@ -1,4 +1,4 @@
-package com.example.demo.job;
+package com.example.demo.config;
 
 import javax.sql.DataSource;
 
