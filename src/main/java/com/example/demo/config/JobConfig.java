@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -35,6 +36,12 @@ public class JobConfig {
 	@Autowired
 	@Qualifier("customStepBuilderFactory")
 	private StepBuilderFactory stepBuilderFactory;
+	
+	@Autowired
+	private ApplicationProperties properties;
+	
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
 	
 	// #############################
 	// # HelloWorldJob
@@ -67,7 +74,10 @@ public class JobConfig {
 			        System.out.println("No active transaction.");
 			    }
 				
-				return RepeatStatus.FINISHED;
+			    logger.info(properties.getHelloWorld());
+			    logger.info(messageSourceAccessor.getMessage("helloworld"));
+
+			    return RepeatStatus.FINISHED;
 			}
 		}).build();
 	}
